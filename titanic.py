@@ -45,3 +45,24 @@ print(pd.pivot_table(training , index = 'Survived' , columns= 'Sex' , values = '
 print('\n')
 print(pd.pivot_table(training , index = 'Survived' , columns = 'Embarked' , values = 'Ticket' , aggfunc='count'))
 
+#Feature Engineering steps 
+df_cat.Cabin
+training['cabin_multiple'] = training.Cabin.apply(lambda x : 0 if pd.isna(x) else len(x.split(' ')))
+training
+
+training['cabin_multiple'].value_counts()
+
+pd.pivot_table(training , index = 'Survived' , columns='cabin_multiple' , values='Ticket' , aggfunc='count')#Survival rate 
+
+#create categories based on the cabin letter (n stands for null)
+#we will treat null values like it's own category 
+
+training['cabin_adv'] = training.Cabin.apply(lambda x : str(x)[0])
+
+print(training.cabin_adv.value_counts())
+pd.pivot_table(training , index = 'Survived' , columns='cabin_adv' , values='Name' , aggfunc='count')
+
+#understand ticket values better 
+#numeric vs non-numeric 
+training['numeric_ticket'] = training.Ticket.apply(lambda x : 1 if x.isnumeric() else 0)
+training['ticket_letters'] = training.Ticket.apply(lambda x : ''.join(x.split(' ')[:-1]).replace('.' , '').replace('/' , '').lower() if len(x.split(' ')[:-1]) > 0 else 0)
